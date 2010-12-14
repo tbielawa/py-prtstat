@@ -12,9 +12,7 @@ import argparse
 
 def main():
 
-    
-
-    # Perform the search GET
+   # Perform the search GET
     response = urllib2.urlopen('http://search.twitter.com/search.json?q=geocode:39.633611,-79.950556,25mi%20PRT')
     data = response.read()
 
@@ -53,16 +51,42 @@ def PrintTweetText(data):
 
 # This approach simply attempts a bag of words approach with no temporal constraints(which is a bad thing here since there's so few tweets)
 # I can promise before even writing that method will be the suck.
-# Just throwing this in to get the ball rolling :)
+# Just throwing this in to get the ball rolling :)  I have a better idea I'll throw in later if someone else gives it a go.
 def KelsBagOWords(data):
-    for tweet in nativeData[u'results']:
+    # The idea behind a bag of words technique is that we simply look to see if word x occurs in a tweet.  If more positive words than negative, the PRT is down.
+    # We don't consider temporal effects ( tweets that are older than a certain age shouldn't be considered)
+    # or weighing some users more heavily than others (the official WVU prt twitter account over others).
+    GoodWords = ['currently running', 'normal']
+    BadWords = ['down','stop', 'hate', 'bus', 'out of service', 'closed']
+    Balance = 0
+    
+    for tweet in data[u'results']:
         # Problem: Some people that are far, far away from Morgantown use :pRT frequently in their tweets for a reason normal humans can not comprehend.
         # Solution:  Ensure that the locations of tweets are in Morgantown or West Virginia.  This change filtered only the annoying :pRT messages and left the sensible messages alone.
         if "West Virginia" in tweet[u'location'] or "Morgantown" in tweet[u'location']:
-            print tweet[u'text'];
+            GoodSigns = 0
+            BadSigns = 0
+            for Good in GoodWords:
+                #Weighting Good Signs since there seem to be fewer ways to express approval of the PRT.
+                if Good in tweet[u'text']:
+                    GoodSigns = GoodSigns + 3
+            for Bad in BadWords:
+                if Bad in tweet[u'text']:
+                    BadSigns = BadSigns + 1
+            if GoodSigns > BadSigns:
+                Balance = Balance + 1
+            elif BadSigns > GoodSigns:
+                Balance = Balance - 1
         else:
             continue
-    
+
+    print "Kel's Bag O' Words method thinks..."
+    if Balance > 0:
+        print "The PRT is probably running: "+abs(Balance)/len(data[u'results'])
+    elif Balance < 0:
+        print "The PRT is probably not running: "+abs(Balance)/len(data[u'results'])
+    else:
+        print "that you should probably just go look for yourself... No one on Twitter seems to know..."
 
 if __name__ == "__main__":
     main()
