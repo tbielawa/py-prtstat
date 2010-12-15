@@ -19,6 +19,7 @@ def main():
     # Parse the JSON data and print it to the terminal
     # That's all for now...
     nativeData = json.loads(data)
+    nativeWeatherData = WeatherInformation()
 
     Madness = ParseArguments()
 
@@ -26,8 +27,10 @@ def main():
         PrintTweets(nativeData)
     if (Madness.PrintTweetText == True):
         PrintTweetText(nativeData)
-    if (Madness.KelsBagOWords == True):
+    if (Madness.KelsBagOWords == True):    
         KelsBagOWords(nativeData)
+    if (Madness.WeatherData == True):
+        PrintWeatherInformation(nativeWeatherData)
 
 def ParseArguments():
     # Check sys.argv for arguments.
@@ -35,9 +38,15 @@ def ParseArguments():
     parser.add_option('--printtweets',dest='PrintTweets', action='store_true',help='Print the information passed to the classifiers.  Useful if you want to know what\'s going into your classifier!')
     parser.add_option('--printtweettext',dest='PrintTweetText', action='store_true',help='Print the plain text of the tweets returned by the Twitter query.')
     parser.add_option('--kelsbagofwords',dest='KelsBagOWords', action='store_true',help='Kel\'s simple attempt at using a simple bag of words technique. Intended to inspire others to join in rather than giving any kind of useful data.')
+    parser.add_option('--weatherdata',dest='WeatherData', action='store_true',help='Print weather information for Morgantown, WV.')
 
     (options, args) = parser.parse_args()
     return options
+
+def PrintWeatherInformation(data):
+    print "Temperature: %s" % (data[u'weatherObservation'][u'temperature'])
+    print "Wind Speed: %s" % (data[u'weatherObservation'][u'windSpeed'])
+    print "Humidity: %s" % (data[u'weatherObservation'][u'humidity'])
 
 def PrintTweets(data):
     print data
@@ -48,6 +57,11 @@ def PrintTweetText(data):
     for Tweet in data[u'results']:
         print Tweet[u'text']
 
+def WeatherInformation():
+    weather_response = urllib2.urlopen('http://ws.geonames.org/weatherIcaoJSON?ICAO=KMGW')
+    weather_data = weather_response.read()
+    nativeWeatherData = json.loads(weather_data)
+    return nativeWeatherData
 
 # This approach simply attempts a bag of words approach with no temporal constraints(which is a bad thing here since there's so few tweets)
 # I can promise before even writing that method will be the suck.
