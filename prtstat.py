@@ -11,21 +11,29 @@ import json;
 from optparse import OptionParser
 
 def main():
-
    # Perform the search GET
     nativeTweetData = TweetData()
     nativeWeatherData = WeatherData()
 
     Madness = ParseArguments()
 
-    if (Madness.PrintTweets == True):
+    # Until we get some more algos I'm making kels bag of words the default
+    # Eventually there will be a class to register algos with called 'guess'.
+    # You'll call it like guess.with('kels')
+    # When you write an algo you'll register it with a name and a function reference
+    # Like guess.register('kels', KelsBagOWords)
+    if Madness.PrintTweets:
         PrintTweets(nativeTweetData)
-    if (Madness.PrintTweetText == True):
+
+    if Madness.PrintTweetText:
         PrintTweetText(nativeTweetData)
-    if (Madness.KelsBagOWords == True):    
-        KelsBagOWords(nativeTweetData)
-    if (Madness.WeatherData == True):
+
+    if Madness.WeatherData:
         PrintWeatherInformation(nativeWeatherData)
+
+    # Guess
+    KelsBagOWords(nativeTweetData)
+
 
 def ParseArguments():
     # Check sys.argv for arguments.
@@ -44,7 +52,7 @@ def ParseArguments():
                       action='store_true',
                       help='Kel\'s simple attempt at using a simple bag of words \
                             technique. Intended to inspire others to join in rather than giving \
-                            any kind of useful data.')
+                            any kind of useful data. (This is default)')
     parser.add_option('--weatherdata',
                        dest='WeatherData',
                        action='store_true',
@@ -112,9 +120,9 @@ def KelsBagOWords(data):
 
     print "Kel's Bag O' Words method thinks..."
     if Balance > 0:
-        print "The PRT is probably running: " + str(abs(Balance)/len(data[u'results']))
+        print "The PRT is probably running (Score: " + str(abs(Balance)/len(data[u'results'])) + ")"
     elif Balance < 0:
-        print "The PRT is probably not running: " + str(abs(Balance)/len(data[u'results']))
+        print "The PRT is probably not running (Score: " + str(abs(Balance)/len(data[u'results'])) + ")"
     else:
         print "that you should probably just go look for yourself... No one on Twitter seems to know..."
 
