@@ -3,11 +3,22 @@ PRT was either down or only functioning sporadically. See the details of each
 file below for search criterion used other information related to the outage.
 
 =------------=
+12.16.2010.2.out
+=------------=
+This is another capture after Kel Cecil mentioned that the PRT was down at
+the engineering station. See 12.16.2010 for more details about this day.
+Search criteria were the same used earlier in the day.
+
+=------------=
 12.16.2010.out
 =------------=
 This outage occurred during finals week of the Fall semester, 2010. The PRT
 was out of operation during the day (exact times unknown), but running as of
 2PM EST. The file is simply a dump of the data using the --printtweets option.
-The search criteria used was:
 
+There was a sudden-onset snowstorm in the morning, bringing transportation in
+Morgantown mostly to a halt. Road crews were slow to respond, and apparently
+the PRT was down sporadically throughout the day.
+
+The search criteria used was:
 'search.json?q=geocode:39.633611,-79.950556,25mi%20PRT'
