@@ -1,0 +1,13 @@
+This directory contains files that are dumps of activity from Twitter when the
+PRT was either down or only functioning sporadically. See the details of each
+file below for search criterion used other information related to the outage.
+
+=------------=
+12.16.2010.out
+=------------=
+This outage occurred during finals week of the Fall semester, 2010. The PRT
+was out of operation during the day (exact times unknown), but running as of
+2PM EST. The file is simply a dump of the data using the --printtweets option.
+The search criteria used was:
+
+'search.json?q=geocode:39.633611,-79.950556,25mi%20PRT'

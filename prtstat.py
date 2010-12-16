@@ -95,10 +95,12 @@ def KelsBagOWords(data):
             continue
 
     print "Kel's Bag O' Words method thinks..."
+    result = float(abs(Balance))/float(len(data[u'results']))
+
     if Balance > 0:
-        print "The PRT is probably running: " + str(abs(Balance)/len(data[u'results']))
+        print "The PRT is probably running: " + str(result)
     elif Balance < 0:
-        print "The PRT is probably not running: " + str(abs(Balance)/len(data[u'results']))
+        print "The PRT is probably not running: " + str(result)
     else:
         print "that you should probably just go look for yourself... No one on Twitter seems to know..."
 

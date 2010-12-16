@@ -1,0 +1,5 @@
+This folder contains sample data grabbed from Twitter via prtstatus.py. Their
+are two subfolder, 'up' and 'down'. 'up' contains a sample of Twitter activity
+when the PRT was known to be operational. 'down' contains sample Twitter
+activity when the PRT was either down, or sporadically down. Please see the
+README in each folder for additional details on file contents and details.
