@@ -10,10 +10,15 @@ import json;
 # For selecting what analysis method you want.
 from optparse import OptionParser
 
+# For weather xml parsing
+from xml.dom import minidom
+
+# Pretty print
+from pprint import pprint
+
 def main():
    # Perform the search GET
     nativeTweetData = TweetData()
-    nativeWeatherData = WeatherData()
 
     Madness = ParseArguments()
 
@@ -29,7 +34,7 @@ def main():
         PrintTweetText(nativeTweetData)
 
     if Madness.WeatherData:
-        PrintWeatherInformation(nativeWeatherData)
+        pprint(WeatherData("26506"))
 
     # Guess
     KelsBagOWords(nativeTweetData)
@@ -61,11 +66,6 @@ def ParseArguments():
     (options, args) = parser.parse_args()
     return options
 
-def PrintWeatherInformation(data):
-    print "Temperature: %s" % (data[u'weatherObservation'][u'temperature'])
-    print "Wind Speed: %s" % (data[u'weatherObservation'][u'windSpeed'])
-    print "Humidity: %s" % (data[u'weatherObservation'][u'humidity'])
-
 def PrintTweets(data):
     print data
 
@@ -75,12 +75,28 @@ def PrintTweetText(data):
     for Tweet in data[u'results']:
         print Tweet[u'from_user'], Tweet[u'text']
 
-def WeatherData():
-    weather_response = urllib2.urlopen('http://ws.geonames.org/weatherIcaoJSON?ICAO=KMGW')
-    weather_data = weather_response.read()
-    nativeWeatherData = json.loads(weather_data)
-    return nativeWeatherData
+def WeatherData(zip_code):
+    weather_url = 'http://xml.weather.yahoo.com/forecastrss?p=%s'
+    weather_ns = 'http://xml.weather.yahoo.com/ns/rss/1.0'
 
+    url = weather_url % zip_code
+    dom = minidom.parse(urllib2.urlopen(url))
+    forecasts = []
+    for node in dom.getElementsByTagNameNS(weather_ns, 'forecast'):
+        forecasts.append({
+            'date': node.getAttribute('date'),
+            'low': node.getAttribute('low'),
+            'high': node.getAttribute('high'),
+            'condition': node.getAttribute('text')
+            })
+        ycondition = dom.getElementsByTagNameNS(weather_ns, 'condition')[0]
+        return {
+            'current_condition': ycondition.getAttribute('text'),
+            'current_temp': ycondition.getAttribute('temp'),
+            'forecasts': forecasts,
+            'title': dom.getElementsByTagName('title')[0].firstChild.data
+            }
+    
 def TweetData():
     tweet_response = urllib2.urlopen('http://search.twitter.com/search.json?q=geocode:39.633611,-79.950556,25mi%20PRT')
     tweet_data = tweet_response.read()
