@@ -90,12 +90,12 @@ def WeatherData(zip_code):
             'condition': node.getAttribute('text')
             })
         ycondition = dom.getElementsByTagNameNS(weather_ns, 'condition')[0]
-        return {
-            'current_condition': ycondition.getAttribute('text'),
-            'current_temp': ycondition.getAttribute('temp'),
-            'forecasts': forecasts,
-            'title': dom.getElementsByTagName('title')[0].firstChild.data
-            }
+    return {
+        'current_condition': ycondition.getAttribute('text'),
+        'current_temp': ycondition.getAttribute('temp'),
+        'forecasts': forecasts,
+        'title': dom.getElementsByTagName('title')[0].firstChild.data
+        }
     
 def TweetData():
     tweet_response = urllib2.urlopen('http://search.twitter.com/search.json?q=geocode:39.633611,-79.950556,25mi%20PRT')
