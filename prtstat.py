@@ -65,7 +65,7 @@ def PrintTweetText(data):
     # This prints everything returned by the query.
     # If you're interested in locality, check out how I filter in KelsBagOWords(data)
     for Tweet in data[u'results']:
-        print Tweet[u'text']
+        print Tweet[u'from_user'], Tweet[u'text']
 
 def WeatherData():
     weather_response = urllib2.urlopen('http://ws.geonames.org/weatherIcaoJSON?ICAO=KMGW')
