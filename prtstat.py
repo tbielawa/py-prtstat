@@ -45,14 +45,15 @@ def main():
     if Madness.PrintTweets:
         PrintTweets(nativeTweetData)
 
-    if Madness.PrintTweetText:
+    elif Madness.PrintTweetText:
         PrintTweetText(nativeTweetData)
 
-    if Madness.WeatherData:
+    elif Madness.WeatherData:
         pprint(WeatherData("26506"))
 
     # Guess
-    KelsBagOWords(nativeTweetData)
+    else:
+        KelsBagOWords(nativeTweetData)
 
 
 def ParseArguments():
