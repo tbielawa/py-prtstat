@@ -31,4 +31,4 @@ it doesn't DO anything with that weather data, but hey, we're getting there.
 Tim 'Shaggy' Bielawa [mail](mailto:timbielawa@gmail.com)|[web](https://github.com/tbielawa)  
 Andrew Butcher [mail](mailto:abutcher@afrolegs.com)|[web](http://afrolegs.com)  
 Ricky Hussmann [mail](mailto:ricky.hussmann@gmail.com)|[web](http://rhussmann.com)  
-Kel Cecil kelcecil -at- praisechaos -dot- com | [github](http://github.com/kelcecil) | [web](http://www.praisechaos.com)
+Kel Cecil [mail](mailto:kelcecil@praisechaos.com) | [github](http://github.com/kelcecil) | [web](http://www.praisechaos.com)
