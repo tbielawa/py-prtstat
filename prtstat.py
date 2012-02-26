@@ -27,6 +27,9 @@
 
 import urllib2;
 import json;
+import time;
+import os;
+
 from optparse import OptionParser
 from xml.dom import minidom
 from pprint import pprint
@@ -45,14 +48,15 @@ def main():
     if Madness.PrintTweets:
         PrintTweets(nativeTweetData)
 
-    if Madness.PrintTweetText:
+    elif Madness.PrintTweetText:
         PrintTweetText(nativeTweetData)
 
-    if Madness.WeatherData:
+    elif Madness.WeatherData:
         pprint(WeatherData("26506"))
 
     # Guess
-    KelsBagOWords(nativeTweetData)
+    else:
+        KelsBagOWords(nativeTweetData)
 
 
 def ParseArguments():
@@ -117,6 +121,34 @@ def TweetData():
     tweet_data = tweet_response.read()
     nativeTweetData = json.loads(tweet_data)
     return nativeTweetData
+
+def SetMorgantownTimezone():
+    # Set the timezone to Morgantown's
+    os.environ['TZ'] = 'US/Eastern'
+    time.tzset()
+
+def IsWeekday():
+    SetMorgantownTimezone()
+    week_index = int(time.strftime('%w'))
+    return not (week_index == 0 or week_index == 6)
+
+def IsSaturday():
+    SetMorgantownTimezone()
+    week_index = int(time.strftime('%w'))
+    return week_index == 6
+
+def IsNowWithinNormalOperatingHours():
+    SetMorgantownTimezone()
+    is_normal_hours = False
+    current_time = float(time.strftime('%H.%M'))
+
+    if IsWeekday():
+        is_normal_hours = (current_time > 6.3 and current_time < 22.15)
+
+    if IsSaturday():
+        is_normal_hours = (current_time > 9.3 and current_time < 17.0)
+
+    return is_normal_hours
 
 # This approach simply attempts a bag of words approach with no temporal constraints(which is a bad thing here since there's so few tweets)
 # I can promise before even writing that method will be the suck.
