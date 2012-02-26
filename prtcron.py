@@ -48,7 +48,7 @@ def main():
             opts.append('datum[created_at]=\"%s\"' % tweet[u'created_at'])
             opts.append('datum[from_user]=\"%s\"' % tweet[u'from_user'])
             opts.append('datum[from_user_name]=\"%s\"' % tweet[u'from_user_name'])
-            opts.append('datum[id]=\"%s\"' % tweet[u'id'])
+            opts.append('datum[tweet_id]=\"%s\"' % tweet[u'id'])
             opts.append('datum[profile_image_url]=\"%s\"' % tweet[u'profile_image_url'])
             opts.append('datum[source]=\"%s\"' % tweet[u'source'])
             opts.append('datum[text]=\"%s\"' % tweet[u'text'])    
