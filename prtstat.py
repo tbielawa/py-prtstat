@@ -125,29 +125,24 @@ def KelsBagOWords(data):
     # The idea behind a bag of words technique is that we simply look to see if word x occurs in a tweet.  If more negative words than positive, the PRT is down.
     # We don't consider temporal effects ( tweets that are older than a certain age shouldn't be considered)
     # or weighing some users more heavily than others (the official WVU prt twitter account over others).
-    GoodWords = ['currently running', 'normal']
-    BadWords = ['down','stop', 'hate', 'bus', 'out of service', 'closed']
+    GoodWords = ['currently running', 'normal', 'normally', 'running']
+    BadWords = ['down','stop', 'hate', 'bus', 'out of service', 'closed', 'fuck', 'late', ':(']
     Balance = 0
     
     for tweet in data[u'results']:
-        # Problem: Some people that are far, far away from Morgantown use :pRT frequently in their tweets for a reason normal humans can not comprehend.
-        # Solution:  Ensure that the locations of tweets are in Morgantown or West Virginia.  This change filtered only the annoying :pRT messages and left the sensible messages alone.
-        if "West Virginia" in tweet[u'location'] or "Morgantown" in tweet[u'location']:
-            GoodSigns = 0
-            BadSigns = 0
-            for Good in GoodWords:
-                #Weighting Good Signs since there seem to be fewer ways to express approval of the PRT.
-                if Good in tweet[u'text']:
-                    GoodSigns = GoodSigns + 3
-            for Bad in BadWords:
-                if Bad in tweet[u'text']:
-                    BadSigns = BadSigns + 1
-            if GoodSigns > BadSigns:
-                Balance = Balance + 1
-            elif BadSigns > GoodSigns:
-                Balance = Balance - 1
-        else:
-            continue
+        GoodSigns = 0
+        BadSigns = 0
+        for Good in GoodWords:
+            #Weighting Good Signs since there seem to be fewer ways to express approval of the PRT.
+            if Good in tweet[u'text'].lower():
+                GoodSigns = GoodSigns + 3
+        for Bad in BadWords:
+            if Bad in tweet[u'text'].lower():
+                BadSigns = BadSigns + 1
+        if GoodSigns > BadSigns:
+            Balance = Balance + 1
+        elif BadSigns > GoodSigns:
+            Balance = Balance - 1
 
     print "Kel's Bag O' Words method thinks..."
     result = float(abs(Balance))/float(len(data[u'results']))
