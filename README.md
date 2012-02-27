@@ -27,6 +27,18 @@ search results for the Morgantown area. It also pulls in weather data for
 Morgantown, WV using a Yahoo! XML feed. For the most part, at least right now,
 it doesn't DO anything with that weather data, but hey, we're getting there.
 
+## Data Collection ##
+We've created a passive data collection system which gathers tweets
+sent from [WVUDOT](https://twitter.com/#!/wvudot), WVU's Department of
+Transportation and Parking twitter handle, and combines each tweet
+with weather data taken from a Yahoo! json feed. WVUDOT tweets
+frequently regarding the status of the PRT. Data collected is viewable
+at [prtdata.afrolegs.com](http://prtdata.afrolegs.com).
+
+We plan to create a data miner which uses the information collected
+from these tweets to classify the status of the PRT based on current
+conditions and perhaps supporting tweets from WVU students.
+
 ## Contributors ##
 Tim 'Shaggy' Bielawa [mail](mailto:timbielawa@gmail.com)|[web](https://github.com/tbielawa)  
 Andrew Butcher [mail](mailto:abutcher@afrolegs.com)|[web](http://afrolegs.com)  
