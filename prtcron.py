@@ -40,7 +40,7 @@ def main():
     for tweet in nativeTweetData[u'results']:
 
         tweetDate = datetime.datetime(*time.strptime(tweet[u'created_at'], "%a, %d %b %Y %H:%M:%S +0000")[0:6])
-        delta = datetime.timedelta(hours=2)
+        delta = datetime.timedelta(minutes=30)
         now = datetime.datetime(*time.localtime()[0:6])
 
         if tweetDate > now - delta:
