@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # Copyright (c) 2010 Tim 'Shaggy' Bielawa <timbielawa@gmail.com>
-# 	      2010 Andrew Butcher <abutcher@afrolegs.com>
-# 	      2010 Ricky Hussmann <ricky.hussmann@gmail.com>
-# 	      2010 Kel Cecil <kelcecil@praisechaos.com>
+#             2010 Andrew Butcher <abutcher@afrolegs.com>
+#             2010 Ricky Hussmann <ricky.hussmann@gmail.com>
+#             2010 Kel Cecil <kelcecil@praisechaos.com>
 #
 # Permission is hereby granted, free of charge, to any person
 # obtaining a copy of this software and associated documentation
@@ -28,6 +28,7 @@
 import urllib2;
 import json;
 import time;
+import datetime;
 import os;
 
 from optparse import OptionParser
@@ -54,6 +55,9 @@ def main():
     elif Madness.WeatherData:
         pprint(WeatherData("26506"))
 
+    elif Madness.AndrewStoppedFuckDown:
+        AndrewsTimeRelativeFuckStoppedDown(nativeTweetData)
+
     # Guess
     else:
         KelsBagOWords(nativeTweetData)
@@ -77,6 +81,10 @@ def ParseArguments():
                       help='Kel\'s simple attempt at using a simple bag of words \
                             technique. Intended to inspire others to join in rather than giving \
                             any kind of useful data. (This is default)')
+    parser.add_option('--andrewfuckstoppeddown',
+                      dest='AndrewStoppedFuckDown',
+                      action='store_true',
+                      help='Andrew\'s time relative stopped, fuck, down algorith.')
     parser.add_option('--weatherdata',
                        dest='WeatherData',
                        action='store_true',
@@ -115,7 +123,7 @@ def WeatherData(zip_code):
         'forecasts': forecasts,
         'title': dom.getElementsByTagName('title')[0].firstChild.data
         }
-    
+
 def TweetData():
     tweet_response = urllib2.urlopen('http://search.twitter.com/search.json?q=geocode:39.633611,-79.950556,25mi%20PRT')
     tweet_data = tweet_response.read()
@@ -160,7 +168,7 @@ def KelsBagOWords(data):
     GoodWords = ['currently running', 'normal', 'normally', 'running']
     BadWords = ['down','stop', 'hate', 'bus', 'out of service', 'closed', 'fuck', 'late', ':(']
     Balance = 0
-    
+
     for tweet in data[u'results']:
         GoodSigns = 0
         BadSigns = 0
@@ -185,6 +193,41 @@ def KelsBagOWords(data):
         print "The PRT is probably not running: " + str(result)
     else:
         print "that you should probably just go look for yourself... No one on Twitter seems to know..."
+
+def AndrewsTimeRelativeFuckStoppedDown(data):
+
+    what_i_care_about = []
+
+    # Gather what I care about...
+    for tweet in data[u'results']:
+        tweet_date = datetime.datetime(*time.strptime(tweet[u'created_at'],
+                                                      "%a, %d %b %Y %H:%M:%S +0000")[0:6])
+        tweet_text = tweet[u'text']
+        what_i_care_about.append((tweet_date, tweet_text))
+
+    # Sort the tweets by date if not sorted already
+    what_i_care_about = sorted(what_i_care_about, key=lambda t: t[0])
+
+    # Get the current and last bad tweet.
+    for tweet in what_i_care_about:
+        if "down" in tweet[1] or "stopped" in tweet[1] or "fuck" in tweet[1]:
+            current = tweet
+            break
+    for tweet in what_i_care_about:
+        if "down" in tweet[1] or "stopped" in tweet[1] or "fuck" in tweet[1] and tweet != current:
+            last = tweet
+            break
+
+    delta = datetime.timedelta(minutes=30)
+    now = datetime.datetime(*time.localtime()[0:6])
+    relative_delta = now - delta
+
+    if not current or not last:
+        print "Not enough bad data to work with."
+    elif current[0] - last[0] < delta and last[0] > relative_delta:
+        print "The PRT is probably down."
+    else:
+        print "The PRT is probably up."
 
 if __name__ == "__main__":
     main()
