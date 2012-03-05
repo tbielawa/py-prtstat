@@ -225,7 +225,8 @@ def FuckStoppedDown(data):
             if word in tweet['text'].lower() and tweet is not current:
                 last = tweet
                 break
-
+            
+    print current, last
     # Gather some datetime information. We will use delta to define
     # the window of time in which a tweet would indicate an outage.
     delta = datetime.timedelta(minutes=30)
@@ -238,7 +239,7 @@ def FuckStoppedDown(data):
     # down.
     if not current and not last:
         print "Not enough bad data to work with."
-    elif current and current['date'] < now and current['date'] > relative_delta:
+    elif current and current['date'] > relative_delta:
         print "The PRT is probably down."
     else:
         print "The PRT is probably up."
