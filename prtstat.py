@@ -226,7 +226,6 @@ def FuckStoppedDown(data):
                 last = tweet
                 break
             
-    print current, last
     # Gather some datetime information. We will use delta to define
     # the window of time in which a tweet would indicate an outage.
     delta = datetime.timedelta(minutes=30)
