@@ -55,8 +55,8 @@ def main():
     elif Madness.WeatherData:
         pprint(WeatherData("26506"))
 
-    elif Madness.AndrewStoppedFuckDown:
-        AndrewsTimeRelativeFuckStoppedDown(nativeTweetData)
+    elif Madness.FuckStoppedDown:
+        FuckStoppedDown(nativeTweetData)
 
     # Guess
     else:
@@ -81,8 +81,8 @@ def ParseArguments():
                       help='Kel\'s simple attempt at using a simple bag of words \
                             technique. Intended to inspire others to join in rather than giving \
                             any kind of useful data. (This is default)')
-    parser.add_option('--andrewfuckstoppeddown',
-                      dest='AndrewStoppedFuckDown',
+    parser.add_option('--fuckstoppeddown',
+                      dest='FuckStoppedDown',
                       action='store_true',
                       help='Andrew\'s time relative stopped, fuck, down algorith.')
     parser.add_option('--weatherdata',
@@ -158,6 +158,10 @@ def IsNowWithinNormalOperatingHours():
 
     return is_normal_hours
 
+def bad_words():
+    words = ['down', 'stopped', 'fuck', 'stuck', 'out of service']
+    return words
+
 # This approach simply attempts a bag of words approach with no temporal constraints(which is a bad thing here since there's so few tweets)
 # I can promise before even writing that method will be the suck.
 # Just throwing this in to get the ball rolling :)  I have a better idea I'll throw in later if someone else gives it a go.
@@ -194,7 +198,7 @@ def KelsBagOWords(data):
     else:
         print "that you should probably just go look for yourself... No one on Twitter seems to know..."
 
-def AndrewsTimeRelativeFuckStoppedDown(data):
+def FuckStoppedDown(data):
 
     what_i_care_about = []
 
@@ -203,28 +207,38 @@ def AndrewsTimeRelativeFuckStoppedDown(data):
         tweet_date = datetime.datetime(*time.strptime(tweet[u'created_at'],
                                                       "%a, %d %b %Y %H:%M:%S +0000")[0:6])
         tweet_text = tweet[u'text']
-        what_i_care_about.append((tweet_date, tweet_text))
+        what_i_care_about.append({'date': tweet_date, 'text': tweet_text})
 
     # Sort the tweets by date if not sorted already
-    what_i_care_about = sorted(what_i_care_about, key=lambda t: t[0])
+    what_i_care_about = sorted(what_i_care_about, key=lambda t: t['date'])
 
-    # Get the current and last bad tweet.
+    # Get the current and last bad tweet that meet our criteria.
+    current = {}
+    last = {}
     for tweet in what_i_care_about:
-        if "down" in tweet[1] or "stopped" in tweet[1] or "fuck" in tweet[1]:
-            current = tweet
-            break
+        for word in bad_words():
+            if word in tweet['text'].lower():
+                current = tweet
+                break
     for tweet in what_i_care_about:
-        if "down" in tweet[1] or "stopped" in tweet[1] or "fuck" in tweet[1] and tweet != current:
-            last = tweet
-            break
+        for word in bad_words():
+            if word in tweet['text'].lower() and tweet is not current:
+                last = tweet
+                break
 
+    # Gather some datetime information. We will use delta to define
+    # the window of time in which a tweet would indicate an outage.
     delta = datetime.timedelta(minutes=30)
     now = datetime.datetime(*time.localtime()[0:6])
     relative_delta = now - delta
 
-    if not current or not last:
+    # Make a determination.  If we got any results at all, give a
+    # determination.  If we have a last bad tweet and it occured
+    # within the relative delta from now, then we assume the PRT is
+    # down.
+    if not current and not last:
         print "Not enough bad data to work with."
-    elif current[0] - last[0] < delta and last[0] > relative_delta:
+    elif current and current['date'] < now and current['date'] > relative_delta:
         print "The PRT is probably down."
     else:
         print "The PRT is probably up."
