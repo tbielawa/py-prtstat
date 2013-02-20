@@ -31,8 +31,9 @@ it doesn't DO anything with that weather data, but hey, we're getting there.
 We've created a passive data collection system which gathers tweets
 sent from [WVUDOT](https://twitter.com/#!/wvudot), WVU's Department of
 Transportation and Parking twitter handle. WVUDOT tweets frequently
-regarding the status of the PRT. Data collected is viewable at
-[prtdata.afrolegs.com](http://prtdata.afrolegs.com).
+regarding the status of the PRT. Data collected is viewable on
+OpenShift at
+[prtdata-akbutcher.rhcloud.com](http://prtdata-akbutcher.rhcloud.com/).
 
 We plan to create a data miner which uses the information collected
 from these tweets to classify the status of the PRT based on current
